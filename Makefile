@@ -1,4 +1,4 @@
-all: package_deploy
+all: rpm
 
 clean:
 	rm -rf RPMS SRPMS
@@ -6,13 +6,8 @@ clean:
 rpm:
 	bash docker-build.sh
 
-circle_deps:
-	sudo apt-get install rpm
-
-package_cloud_deps:
-	gem install package_cloud
-
-package_deploy: package_cloud_deps rpm
-	package_cloud push pantheon/internal/fedora/22 RPMS/x86_64/*fc22*.rpm
+deploy:
+	scp -p RPMS/x86_64/*el7*.rpm 'static-vh.gbif.org:/var/www/html/gbifrepo/x86_64/Centos/7/'
+	ssh static-vh.gbif.org sudo /var/www/html/gbifrepo/create-gbifrepo
 
 .PHONY: all

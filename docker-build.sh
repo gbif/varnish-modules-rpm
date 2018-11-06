@@ -1,31 +1,16 @@
-#!/bin/sh
-set -e
-
-# which fedora distros to build this rpm for
-BUILD_VERSIONS=${BUILD_VERSIONS:-22}
-echo "==> Running RPM builds for these Fedora version(s): $BUILD_VERSIONS"
-echo
+#!/bin/bash -e
 
 CURRENT_DIR="$(cd -P -- "$(dirname -- "$0")" && pwd -P)"
 
-RUN_ARGS="--rm"
-if [ -n "$CIRCLECI" ] ; then
-  RUN_ARGS=""
-fi
-
 mkdir -p $CURRENT_DIR/{RPMS,SRPMS}
+chmod 777 $CURRENT_DIR/{RPMS,SRPMS}
 
-for ver in $BUILD_VERSIONS; do
-    echo; echo "==> Building rpm for fedora $ver "
-    build_image=quay.io/getpantheon/rpmbuild-fedora:$ver
+docker pull jc21/rpmbuild-centos7
 
-    docker pull $build_image
-
-    docker run $RUN_ARGS \
-        -w /tmp \
-        -v $CURRENT_DIR:/tmp \
-        -v $CURRENT_DIR/RPMS:/root/rpmbuild/RPMS/ \
-        -v $CURRENT_DIR/SRPMS:/root/rpmbuild/SRPMS/ \
-        $build_image \
-        "/tmp/rpm-build.sh"
-done
+docker run --rm \
+       -v $CURRENT_DIR:/home/rpmbuilder/stuff \
+       -v $CURRENT_DIR/RPMS:/home/rpmbuilder/rpmbuild/RPMS/ \
+       -v $CURRENT_DIR/SPECS:/home/rpmbuilder/rpmbuild/SPECS/ \
+       -v $CURRENT_DIR/SRPMS:/home/rpmbuilder/rpmbuild/SRPMS/ \
+       jc21/rpmbuild-centos7 \
+       "rpmbuild/SPECS/rpm-build.sh"

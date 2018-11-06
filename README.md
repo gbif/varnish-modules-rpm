@@ -1,22 +1,25 @@
-varnish-modules-rpm
-===================================
+# Varnish Modules RPM
 
-spec for creating varnish-modules-rpm package on fedora
+RPM spec for creating varnish-modules-rpm package on CentOS.
 
+Based on https://github.com/istenrot/varnish-modules-rpm-build, but then completely rewritten
+to use a different Docker image.
 
-Usage
------
+## Usage
 
-This repo is designed for Circle-CI to do both the RPM builds and pushing
-RPM artifacts to package_cloud. The push to package_cloud only happens from the `master` branch.
+```
+make clean
+make rpm
+make deploy
+```
 
-You can run the RPM builds manually with `make rpm`. Docker is required.
+The RPM is published to http://gbifrepo.gbif.org/x86_64/Centos/7/
 
-RPMs will be built for multiple versions of Fedora. These are set by the `BUILD_VERSIONS`
-environment variable, and can be overridden at runtime. To build only fedora-22:
-
-    $ BUILD_VERSIONS=22 make rpm
-
-You can push the RPMs to package_cloud with `make package_deploy`.
-
-Ensure a `PACKAGECLOUD_TOKEN` env var is set in your local env or on the circle-ci project.
+```
+[gbif]
+name=Centos $releasever - $basearch
+failovermethod=priority
+baseurl=http://gbifrepo.gbif.org/$basearch/Centos/$releasever/
+enabled=1
+gpgcheck=0
+```
