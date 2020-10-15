@@ -1,4 +1,4 @@
-%define datecode  %(date +%Y%m%d%H%M)
+%define datecode 201903271857
 
 %define nr_ver  0.15.0
 %define release_number %{datecode}
@@ -56,6 +56,8 @@ make install DESTDIR=%{buildroot}
 /usr/share/man/man3/vmod_xkey.3.gz
 
 %changelog
+* Thu Oct 15 2020 Matthew Blissett <mblissett@gbif.org>
+- Update to 6.0-lts branch.
 * Tue Nov 06 2018 Matthew Blissett <mblissett@gbif.org>
 - Update to v0.15.0, add man pages.
 * Fri Sep 16 2016 Kyle Ibrahim <kibrahim@pantheon.io>

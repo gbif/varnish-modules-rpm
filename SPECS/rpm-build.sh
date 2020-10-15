@@ -19,7 +19,7 @@ function finish {
 }
 trap finish EXIT
 
-curl -Ss https://packagecloud.io/install/repositories/varnishcache/varnish5/script.rpm.sh | sudo bash
+curl -Ss https://packagecloud.io/install/repositories/varnishcache/varnish60lts/script.rpm.sh | sudo bash
 
 # download and install all RPMs listed as BuildRequires
 sudo yum-builddep -y ${spec_file}
