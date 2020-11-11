@@ -1,6 +1,6 @@
-%define datecode 201903271857
+%define datecode %(date +%Y%m%d%H%M)
 
-%define nr_ver  0.15.0
+%define nr_ver  0.15.1
 %define release_number %{datecode}
 
 Name:		varnish-modules
@@ -10,9 +10,9 @@ Summary:	A collection of modules ("vmods") extending Varnish.
 License:	GPL
 URL:		https://github.com/varnish/varnish-modules
 
-Source0:	https://download.varnish-software.com/varnish-modules/varnish-modules-%{nr_ver}.tar.gz
+Source0:	https://github.com/varnish/varnish-modules/archive/%{nr_ver}.zip
 
-BuildRequires:  varnish varnish-devel
+BuildRequires:  varnish varnish-devel python-sphinx
 
 %description
 This is a collection of modules ("vmods") extending Varnish VCL used for describing HTTP request/response policies with additional capabilities.
@@ -22,7 +22,7 @@ https://github.com/varnish/varnish-modules
 %setup -n varnish-modules-%{nr_ver}
 
 %build
-./configure && make
+./bootstrap && ./configure && make && make check -j 4
 
 %install
 make install DESTDIR=%{buildroot}
@@ -56,6 +56,8 @@ make install DESTDIR=%{buildroot}
 /usr/share/man/man3/vmod_xkey.3.gz
 
 %changelog
+* Wed Nov 11 2020 Matthew Blissett <mblissett@gbif.org>
+- Update to v0.15.1 for Varnish 6.0.7.
 * Thu Oct 15 2020 Matthew Blissett <mblissett@gbif.org>
 - Update to 6.0-lts branch.
 * Tue Nov 06 2018 Matthew Blissett <mblissett@gbif.org>
